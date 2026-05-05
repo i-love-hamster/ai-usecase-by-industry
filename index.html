@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>業種別 AI活用ユースケース集 — 第4回 AI活用サポート オフ会</title>
+<style>
+  :root {
+    --color-bg: #ffffff;
+    --color-text: #1f2937;
+    --color-muted: #6b7280;
+    --color-border: #e5e7eb;
+    --color-accent: #2563eb;
+    --color-accent-soft: #eff6ff;
+    --color-good: #15803d;
+    --color-good-soft: #ecfdf5;
+    --color-bad: #b91c1c;
+    --color-bad-soft: #fef2f2;
+    --color-code-bg: #f8fafc;
+    --color-highlight: #fef3c7;
+    --max-width: 780px;
+    --radius: 8px;
+    --font-jp: -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
+    --font-mono: 'SF Mono', 'Consolas', 'Menlo', monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-jp);
+    color: var(--color-text);
+    background: #f3f4f6;
+    margin: 0;
+    padding: 32px 16px;
+    line-height: 1.75;
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .sheet {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    background: var(--color-bg);
+    padding: 48px 56px;
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.04);
+  }
+
+  header.doc-header {
+    border-bottom: 2px solid var(--color-accent);
+    padding-bottom: 16px;
+    margin-bottom: 32px;
+  }
+  header.doc-header h1 {
+    font-size: 26px;
+    margin: 0 0 8px;
+    letter-spacing: 0.02em;
+    color: #111827;
+  }
+  header.doc-header .meta {
+    font-size: 13px;
+    color: var(--color-muted);
+  }
+
+  h2 {
+    font-size: 19px;
+    margin: 36px 0 14px;
+    padding: 6px 0 6px 12px;
+    border-left: 4px solid var(--color-accent);
+    color: #111827;
+  }
+  h2 .num {
+    color: var(--color-accent);
+    margin-right: 10px;
+    font-weight: 700;
+  }
+
+  h3 {
+    font-size: 16px;
+    margin: 22px 0 8px;
+    color: #1f2937;
+  }
+
+  p { margin: 8px 0; }
+
+  ul, ol { margin: 8px 0 12px; padding-left: 22px; }
+  li { margin: 3px 0; }
+
+  .lead {
+    background: var(--color-accent-soft);
+    border-left: 4px solid var(--color-accent);
+    padding: 14px 18px;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    margin: 0 0 28px;
+    font-size: 14.5px;
+  }
+  .lead strong { color: var(--color-accent); }
+
+  pre.prompt {
+    background: var(--color-code-bg);
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--color-accent);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.7;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    color: #1f2937;
+    margin: 8px 0 18px;
+  }
+  pre.prompt::before {
+    content: "📋 コピペ用テンプレ";
+    display: block;
+    font-family: var(--font-jp);
+    font-size: 11px;
+    color: var(--color-accent);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  pre.prompt.variant::before { content: "📋 コピペ用テンプレ（別パターン）"; }
+
+  .prompt-copy-wrap {
+    margin: 8px 0 18px;
+    position: relative;
+  }
+
+  .prompt-copy-wrap pre.prompt {
+    margin: 0;
+  }
+
+  .copy-template-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: 1px solid var(--color-accent);
+    border-radius: 6px;
+    background: #fff;
+    color: var(--color-accent);
+    cursor: pointer;
+    font-family: var(--font-jp);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    padding: 7px 10px;
+  }
+
+  .copy-template-btn:hover,
+  .copy-template-btn:focus-visible {
+    background: var(--color-accent-soft);
+  }
+
+  .copy-template-btn.copied {
+    background: var(--color-good);
+    border-color: var(--color-good);
+    color: #fff;
+  }
+
+  .ol-clean {
+    counter-reset: step;
+    list-style: none;
+    padding-left: 0;
+    margin: 12px 0;
+  }
+  .ol-clean li {
+    counter-increment: step;
+    position: relative;
+    padding: 8px 0 8px 36px;
+    margin: 4px 0;
+  }
+  .ol-clean li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 24px;
+    height: 24px;
+    background: var(--color-accent);
+    color: #fff;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 24px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .followup {
+    background: #f9fafb;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin: 12px 0;
+  }
+  .followup h3 { margin-top: 0; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 18px;
+    font-size: 14px;
+  }
+  th, td {
+    border: 1px solid var(--color-border);
+    padding: 10px 12px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: #f9fafb;
+    font-weight: 600;
+  }
+
+  .footer-note {
+    margin-top: 36px;
+    padding: 16px 18px;
+    background: var(--color-highlight);
+    border-radius: var(--radius);
+    font-size: 14px;
+    color: #78350f;
+  }
+
+  /* 業種カード見出しのコード部分用の小調整 */
+  h2 .code {
+    display: inline-block;
+    background: var(--color-accent);
+    color: #fff;
+    font-size: 13px;
+    padding: 2px 10px;
+    border-radius: 12px;
+    margin-right: 10px;
+    font-weight: 700;
+    vertical-align: middle;
+  }
+
+  /* Print styles — A4 */
+  @media print {
+    body {
+      background: #fff;
+      padding: 0;
+      font-size: 11pt;
+      line-height: 1.6;
+    }
+    .sheet {
+      box-shadow: none;
+      max-width: none;
+      padding: 16mm 18mm;
+      border-radius: 0;
+    }
+    h2 { page-break-after: avoid; }
+    .copy-template-btn { display: none; }
+    pre.prompt, .followup { page-break-inside: avoid; }
+  }
+
+  @page {
+    size: A4;
+    margin: 14mm;
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <header class="doc-header">
+    <h1>業種別 AI活用ユースケース集</h1>
+    <div class="meta">第4回 AI活用サポート オフ会 配布資料 ／ 2026-05-05</div>
+  </header>
+
+  <p class="lead">
+    各業種カードは「典型業務 → AIに任せられること → すぐ試せるプロンプト → 次の一歩」の4段構成。
+    目的は <strong>「自分の副業に使えるかわからない」を、「明日からこれを試す」に変える</strong> こと。
+  </p>
+
+  <h2><span class="num">使い方</span>このページを最大限に活かす3ステップ</h2>
+  <ol class="ol-clean">
+    <li>自分の業種カードを開く（複数該当する人は2〜3枚）</li>
+    <li>「すぐ試せるプロンプト」を <strong>そのままコピペしてAIに投げる</strong></li>
+    <li>返ってきた答えを見て、「次の一歩」のどれをやるか1つ選ぶ</li>
+  </ol>
+
+  <h2><span class="code">I1</span>せどり・物販</h2>
+
+  <h3>典型業務</h3>
+  <p>仕入れリサーチ／商品ページ作成／在庫・売上管理／問い合わせ対応／梱包指示</p>
+
+  <h3>AIに任せられること</h3>
+  <ul>
+    <li>商品名・型番から、Amazon/メルカリ向けの商品説明文を一括生成</li>
+    <li>仕入れ判断の補助（出品相場・回転率・利益率を読み込ませて判断材料化）</li>
+    <li>売上CSVの月次集計・利益率分析</li>
+    <li>問い合わせメールのテンプレ作成（クレーム・返品・在庫切れ）</li>
+    <li>出品画像のキャプション・キーワード最適化</li>
+  </ul>
+
+  <h3>すぐ試せるプロンプト</h3>
+<pre class="prompt">私はメルカリとAmazonで中古ゲーム機の物販をしている個人事業主です。
+直近1ヶ月の販売データ（商品名・販売価格・仕入れ価格・販売日）をCSVで持っています。
+このCSVから、利益率上位10商品と、回転日数（仕入れ→販売までの日数）を集計したいです。
+スプレッドシートにそのまま貼れる表で出力してください。</pre>
+
+  <h3>次の一歩（1つ選んでね）</h3>
+  <ol class="ol-clean">
+    <li>直近1ヶ月の販売CSVをAIに渡して利益率ランキングを作る</li>
+    <li>よく送る問い合わせ返信のテンプレを5パターン作っておく</li>
+    <li>新規出品の商品説明文をAIに下書きさせて、自分は最終チェックだけにする</li>
+  </ol>
+
+  <h2><span class="code">I2</span>アフィリエイト・ブログ・ウェブライター</h2>
+
+  <h3>典型業務</h3>
+  <p>キーワード選定／記事構成／本文執筆／リライト／画像選定／公開後の改善</p>
+
+  <h3>AIに任せられること</h3>
+  <ul>
+    <li>ターゲットキーワードから記事構成（見出しツリー）を生成</li>
+    <li>競合記事の要約・差分抽出（自分の記事で何を強調すべきかが見える）</li>
+    <li>本文の下書き（特にH2/H3単位での執筆）</li>
+    <li>既存記事のリライト・SEO観点でのチェック</li>
+    <li>内部リンク候補の提案</li>
+  </ul>
+
+  <h3>すぐ試せるプロンプト</h3>
+<pre class="prompt">私は副業で美容系ブログを運営しているライターです。
+「敏感肌 化粧水 30代」というキーワードで、3000字のブログ記事構成を作ってください。
+H2は5個、各H2にH3を2〜3個。
+読者は乾燥や肌荒れに悩む30代女性で、まだ化粧品ジプシー中の人を想定しています。
+最後にCTA（おすすめ商品の比較表への誘導）も入れてください。</pre>
+
+  <h3>次の一歩</h3>
+  <ol class="ol-clean">
+    <li>直近で書きたい記事のキーワードで構成案を3パターン作って比較する</li>
+    <li>既存の伸びていない記事1本をAIにリライト案を出してもらう</li>
+    <li>競合上位3記事を貼り付けて「自分の記事で勝てる切り口」を出してもらう</li>
+  </ol>
+
+  <h2><span class="code">I5</span>YouTube・SNS運用代行</h2>
+
+  <h3>典型業務</h3>
+  <p>クライアントヒアリング／企画立案／台本作成／投稿文作成／コメント対応／レポート作成</p>
+
+  <h3>AIに任せられること</h3>
+  <ul>
+    <li>クライアントの業種から、SNS運用方針の初期ドラフト作成</li>
+    <li>月間投稿カレンダー（曜日別テーマ・本数）の生成</li>
+    <li>動画台本（フック・本論・CTA）のテンプレ化</li>
+    <li>投稿後のコメント分析・返信案</li>
+    <li>クライアント向け月次レポートの定型文生成</li>
+  </ul>
+
+  <h3>すぐ試せるプロンプト</h3>
+<pre class="prompt">クライアントは40代女性の整体院オーナーで、Instagram運用代行を依頼されています。
+ターゲットは肩こり・腰痛で悩む30〜50代の女性。
+1ヶ月分（週3投稿×4週=12投稿）の投稿カレンダーを作ってください。
+各投稿に「テーマ」「投稿文（200字以内・絵文字あり）」「ハッシュタグ案5個」を含めてください。</pre>
+
+  <h3>次の一歩</h3>
+  <ol class="ol-clean">
+    <li>担当中のクライアント1社の月間カレンダーをAIで一括下書きする</li>
+    <li>動画台本の自分専用テンプレ（オープニング15秒・本論・CTA）を1つ確定させる</li>
+    <li>月次レポートの「今月の振り返り」セクションをAIに任せる</li>
+  </ol>
+
+  <h2><span class="code">I6</span>コンテンツ販売・ハンドメイド・スキル販売・コンサル</h2>
+
+  <h3>典型業務</h3>
+  <p>商品（コンテンツ）企画／販売ページ作成／顧客対応／コンサル資料作成／フォローアップ</p>
+
+  <h3>AIに任せられること</h3>
+  <ul>
+    <li>商品コンセプトのブラッシュアップ（一言で何が売りか言語化）</li>
+    <li>販売ページ（LP）の構成・コピー下書き</li>
+    <li>お客様の声・FAQの整理</li>
+    <li>ハンドメイド作品の商品説明文（minne・Creema向け）</li>
+    <li>コンサル受講生向けの宿題・フィードバックテンプレ</li>
+    <li>マルシェ・イベント出店時の在庫・販売管理表</li>
+  </ul>
+
+  <h3>すぐ試せるプロンプト（ハンドメイド・マルシェ）</h3>
+<pre class="prompt">私はお花の寄植えと花苗をマルシェで販売している個人事業主です。
+月に2〜3回、地元のマルシェに出店しています。
+仕入れ・販売・利益を管理する表を作りたいです。
+列項目は「仕入れ日・商品名・仕入れ価格・販売予定日・販売価格・実販売数・残数・利益・備考」。
+Googleスプレッドシートに貼れる形で、最初の3行にサンプルデータも入れてください。</pre>
+
+  <h3>すぐ試せるプロンプト（コンサル・スキル販売）</h3>
+<pre class="prompt variant">私は副業コンサルをしている個人事業主です。
+「会社員のための副業スタートアップ講座（全6回・1回90分）」のカリキュラムを作りたいです。
+受講生は副業未経験の30代会社員。
+各回のテーマ・到達目標・宿題を一覧表にしてください。</pre>
+
+  <h3>次の一歩</h3>
+  <ol class="ol-clean">
+    <li>自分の主力商品1つの販売ページ構成をAIに作ってもらう</li>
+    <li>マルシェ・イベント用の在庫管理表を作って、次の出店から運用する</li>
+    <li>受講生からよく来る質問TOP10をAIに整理させてFAQページの下地にする</li>
+  </ol>
+
+  <h2><span class="code">I8</span>店舗・小商い</h2>
+
+  <h3>典型業務</h3>
+  <p>店頭オペレーション／SNS発信／予約・問い合わせ対応／メニュー・POP作成／顧客リピート促進</p>
+
+  <h3>AIに任せられること</h3>
+  <ul>
+    <li>季節メニュー・新商品の告知文（Google Business Profile・Instagram用）</li>
+    <li>店内POPのキャッチコピー</li>
+    <li>予約確認・リマインドメールのテンプレ</li>
+    <li>顧客リスト（許可ベース）からのDM文案</li>
+    <li>仕入れ・売上の月次集計</li>
+  </ul>
+
+  <h3>すぐ試せるプロンプト</h3>
+<pre class="prompt">私は地元で小さなカフェを経営しています。
+6月の新メニュー「自家製レモンスカッシュ（550円）」をInstagramで告知したいです。
+投稿文（200字以内・絵文字あり）と、店頭POPのキャッチコピー（15字以内）を3パターンずつ作ってください。
+ターゲットは20〜30代の女性で、写真映えと爽やかさを重視しています。</pre>
+
+  <h3>次の一歩</h3>
+  <ol class="ol-clean">
+    <li>直近1ヶ月の新メニュー・キャンペーン告知をAIで一括下書きする</li>
+    <li>予約確認メールのテンプレを1つ完成させる</li>
+    <li>月次の売上集計のフォーマットをAIに作ってもらう</li>
+  </ol>
+
+  <h2><span class="code">I9</span>まだ業種が決まっていない人向け</h2>
+
+  <h3>典型状況</h3>
+  <p>副業を始めたいが、何で始めるかが決まっていない／いくつか興味はあるが絞れない</p>
+
+  <h3>AIに任せられること</h3>
+  <ul>
+    <li>自分のスキル・興味・使える時間から、向いている副業の候補出し</li>
+    <li>各候補の「初期コスト・収益化までの期間・難易度」の比較</li>
+    <li>1つに絞ったときの最初の3ステップ提案</li>
+  </ul>
+
+  <h3>すぐ試せるプロンプト</h3>
+<pre class="prompt">私は会社員（30代・経理職5年）で、平日夜と週末に週10時間ほど副業の時間を確保できます。
+初期投資は5万円までならOK、半年以内に月3万円の収入が目標です。
+私のスキル・性格（在宅で黙々作業が好き、人と話すのは少し苦手）から、
+向いていそうな副業を3つ、それぞれ「メリット・デメリット・最初の30日でやること」つきで提案してください。</pre>
+
+  <h3>次の一歩</h3>
+  <ol class="ol-clean">
+    <li>AIの提案3つを見て「これなら始められそう」と思ったものを1つ選ぶ</li>
+    <li>選んだ業種のカードに戻って「すぐ試せるプロンプト」を試す</li>
+    <li>1ヶ月後のオフ会で進捗を共有する</li>
+  </ol>
+
+  <h2><span class="num">共通</span>どの業種でもまず最初にやる3つ</h2>
+  <p>業種に関わらず、AIで副業を効率化したい人がまずやる3つを置いておく。</p>
+
+  <h3>1. 自分の業務リストを書き出す</h3>
+<pre class="prompt">私の業務は次の通りです:
+- A: 【業務名】（月N時間）
+- B: 【業務名】（月N時間）
+- C: 【業務名】（月N時間）
+
+このうちAIで効率化できる順に並べ替えて、それぞれ最初の一歩を提案してください。</pre>
+
+  <h3>2. よく書く文章をテンプレ化する</h3>
+  <p>顧客対応メール／SNS投稿／商品説明など、毎回似たような文章を書いているなら、AIに「自分用テンプレ」を作らせて使い回す。</p>
+
+  <h3>3. 月次の振り返りをAIに任せる</h3>
+  <p>売上CSV・SNSのインサイト・問い合わせログなどをAIに渡して、月末にまとめて分析させる。</p>
+
+  <h2><span class="num">WS</span>オフ会中に決めること（ワークシート）</h2>
+
+  <div class="followup">
+    <table>
+      <tbody>
+        <tr>
+          <th style="width:42%">項目</th>
+          <th>自分の答え</th>
+        </tr>
+        <tr>
+          <td>私の業種カードはどれ？</td>
+          <td>I__</td>
+        </tr>
+        <tr>
+          <td>「すぐ試せるプロンプト」のうち、今日試すのはどれ？</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td>「次の一歩」で来週までにやる1つは？</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td>困ったとき相談する相手は？（参加者・運営どちらでもOK）</td>
+          <td>&nbsp;</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer-note">
+    💡 「私の業種に当てはまるカードがない」「複数業種にまたがっている」場合は、近そうなカード2枚を組み合わせてOK。運営に声をかけてください。
+  </div>
+
+</div>
+<script>
+  document.querySelectorAll('pre.prompt').forEach((prompt) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'prompt-copy-wrap';
+    prompt.parentNode.insertBefore(wrap, prompt);
+    wrap.appendChild(prompt);
+
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'copy-template-btn';
+    button.textContent = 'コピー';
+    button.setAttribute('aria-label', 'テンプレをコピー');
+    wrap.appendChild(button);
+
+    button.addEventListener('click', async () => {
+      const text = prompt.textContent.trim();
+
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const textarea = document.createElement('textarea');
+          textarea.value = text;
+          textarea.setAttribute('readonly', '');
+          textarea.style.position = 'fixed';
+          textarea.style.opacity = '0';
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          textarea.remove();
+        }
+
+        button.textContent = 'コピー済み';
+        button.classList.add('copied');
+        window.setTimeout(() => {
+          button.textContent = 'コピー';
+          button.classList.remove('copied');
+        }, 1600);
+      } catch (error) {
+        button.textContent = '失敗';
+        window.setTimeout(() => {
+          button.textContent = 'コピー';
+        }, 1600);
+      }
+    });
+  });
+</script>
+</body>
+</html>
